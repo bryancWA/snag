@@ -26,7 +26,7 @@ app.get('/api/getcoordinates/:zipCode', (req, res) => {
 app.get('/api/getwater/:west/:south/:east/:north', (req, res) => {
   const { west, south, east, north } = req.params;
   console.log('req.params:', west, south, east, north);
-  axios.get(`http://waterservices.usgs.gov/nwis/iv/?format=json&bBox=${west},${south},${east},${north}&parameterCd=00060,00065&siteStatus=all`)
+  axios.get(`http://waterservices.usgs.gov/nwis/iv/?format=json&bBox=${west},${south},${east},${north}&parameterCd=00060,00065,00010&siteStatus=active`)
   .then((result) => {
     // console.log('getwater result:', result.data);
     res.send(result.data);
