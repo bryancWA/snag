@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const DataRender = ({ waterData }) => {
+const DataRender = ({ waterData, setOpenPortal }) => {
   const [valueSelected, setValueSelected] = useState(false);
   const [waterSite, setWaterSite] = useState({});
 
@@ -13,7 +13,9 @@ const DataRender = ({ waterData }) => {
 
   return (
     <div id="data-render-div">
-      <div className="dataRender"> Your Activities </div>
+      <div className="dataRender"> 
+        <button type="button" onClick={() => setOpenPortal(true)}>Add Record</button>
+      </div>
       <div className ="dataRender"> You Should: </div>
       <div className="dataRender"> {!valueSelected ? <select onChange={(e) => renderWaterData(e.target.value)}>
         <option> Select A Site </option>

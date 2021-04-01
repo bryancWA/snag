@@ -3,10 +3,12 @@ import InputForm from './components/InputForm.jsx';
 import axios from 'axios';
 import Header from './components/Header.jsx';
 import DataRender from './components/DataRender.jsx';
+import InputModal from './components/InputModal.jsx';
 
 
 const App = () => {
   const [waterData, setWaterData] = useState([]);
+  const [openPortal, setOpenPortal] = useState(false);
   
   
   
@@ -76,7 +78,8 @@ const App = () => {
     <div>
       <Header />
       <InputForm getCoord={getCoord} myCoord={myCoord}/>
-      {waterData.length > 1 ? <DataRender waterData={waterData}/> : <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div>}
+      {waterData.length > 1 ? <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/> : <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div>}
+      <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal}/>
     </div>
   )
 }
