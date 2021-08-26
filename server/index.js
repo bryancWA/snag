@@ -2,7 +2,7 @@ const axios = require('axios');
 const express = require('express');
 const morgan = require('morgan');
 const { GEOCODE_KEY } = require('../config.js')
-const { insertUserInfo } = require('./queries.js')
+const { insertUserInfo, getRecordQuery } = require('./queries.js')
 const app = express();
 
 const PORT = 3000;
@@ -46,6 +46,10 @@ app.post('/api/userinput', (req, res) => {
   insertUserInfo(username, sitename, value, unitname, activity, res);
 })
 
+app.get('/api/getRecord/:site', (req, res) => {
+  const { site } = req.params;
+  getRecordQuery(site, res);
+})
 
 app.listen(PORT, () => {
   console.log(`server listening on port:${PORT}`)

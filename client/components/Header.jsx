@@ -1,12 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ resetWaterDataFlag, setResetWaterDataFlag, setOpenProfile }) => {
   return (
-    <div id="header">
-      <div> Reset Icon </div>
-      <h2> Snag </h2>
-      <div> Profile Icon </div>
-    </div>
+    
+      <div id="header">
+        <Link to="/"><i className="fas fa-undo header-style" onClick={() => setResetWaterDataFlag(true)}></i></Link>
+        <h1 className="header-style"> Snag </h1>
+        <Link to="/userprofile"><i className="fas fa-user-alt header-style" onClick={() => setOpenProfile(true)}></i></Link>
+      </div>
   )
 }
 

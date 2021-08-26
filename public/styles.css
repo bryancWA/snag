@@ -3,8 +3,14 @@ body {
   width: 100%;
   margin: 0;
   background-color: rgb(190, 208, 229);
+  font-family: 'New Tegomin', serif;
 }
-
+ button {
+  font-family: 'New Tegomin', serif;
+  margin: 1px 1px;
+  border-radius: 5px;
+  border: none;
+ }
 
 #app {
   height: 1000px;
@@ -15,26 +21,46 @@ body {
   background-color: white;
 }
 
+.hidden-style {
+  display: none;
+}
+
 #header {
-  height: 125px;
+  height: 100px;
   border: 1x solid black;
   padding: 20px 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   background-color: rgb(56, 102, 155);
+  align-items: center;
+  font-family: 'New Tegomin', serif;
+  font-size: 3em;
 
+}
+
+.header-style {
+  margin: 10px 50px;
 }
 
 #location-input {
   border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
   width: 50%;
   height: 150px;
-  margin: 50px 25% 50px 25%;
+  margin: 50px 25% 25px 25%;
+  text-align: center;
+  padding: 5px 10px 30px 10px;
+}
+
+#info-prompt {
   text-align: center;
 }
 
 #data-render-div {
+  margin-top: 25px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -42,14 +68,38 @@ body {
 
 .dataRender {
   border: 1px solid black;
-  height: 300px;
-  width: 150px;
+  border-radius: 5px;
+  height: 325px;
+  width: 175px;
   margin: 50px 50px;
-  padding: 10px 10px;
+  padding: 5px 10px;
   text-align: center;
+  overflow-y: auto;
+  background-color: rgb(190, 208, 229);
 }
 
 select {
   width: 100px;
   overflow: hidden;
+}
+
+.river-info {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-top: 50px;
+  background-color: white;
+}
+
+.activity-record {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 2px 2px;
+  margin: 5px 5px;
+  background-color: white;
+}
+
+.activity-log {
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: white;
 }

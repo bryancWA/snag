@@ -4,16 +4,22 @@ import axios from 'axios';
 import Header from './components/Header.jsx';
 import DataRender from './components/DataRender.jsx';
 import InputModal from './components/InputModal.jsx';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import UserProfile from './components/UserProfile.jsx';
+
 
 
 const App = () => {
   const [waterData, setWaterData] = useState([]);
   const [openPortal, setOpenPortal] = useState(false);
+  const [currentSearchParams, setCurrentSearchParams] = useState('');
+  const [resetWaterDataFlag, setResetWaterDataFlag] = useState(false);
+  
   
   
   
   const getCoord = (zipCode) => {
-    console.log(zipCode);
+    setCurrentSearchParams(zipCode);
     axios.get(`/api/getcoordinates/${zipCode}`)
       .then((result) => {
         console.log(result);
@@ -43,7 +49,7 @@ const App = () => {
       obj.siteName = data[i].sourceInfo.siteName;
       obj.siteCode = data[i].sourceInfo.siteCode[0];
       obj.value = data[i].values[0].value[0].value;
-      obj.variableName = data[i].variable.variableName;
+      obj.unitName = data[i].variable.variableName;
       tempArr.push(obj);
     }
     setWaterData(tempArr);
@@ -72,16 +78,56 @@ const App = () => {
   }
 
   // useEffect(() => setValueSelected(false), waterData);
-
+  if (resetWaterDataFlag) {
+    setWaterData([]);
+    setOpenProfile(false);
+    setResetWaterDataFlag(false);
+  }
   return (
 
-    <div>
-      <Header />
-      <InputForm getCoord={getCoord} myCoord={myCoord}/>
-      {waterData.length > 1 ? <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/> : <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div>}
-      <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal}/>
-    </div>
+      <div>
+
+        <Header resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag} />
+        <Switch>
+
+          <Route path="/query-result">
+                {/* <Header resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag} setOpenProfile={setOpenProfile}/> */}
+                <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/>
+          </Route>
+
+
+          
+          <Route path="/userprofile" >
+              <UserProfile resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag}/>
+          </Route>
+          <Route exact path="/">
+            
+            {waterData.length > 1 ? <Redirect to="/query-result"/> : <InputForm getCoord={getCoord} myCoord={myCoord}/>}
+            
+
+          </Route>
+        </Switch>
+        <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal}/>
+
+      </div>
   )
 }
 
 export default App;
+
+
+// {waterData.length > 1 ?
+//   <div>
+//     <Redirect from="/" to="/query-result"/> 
+//     <Route path="/query-result">
+//         <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/>
+//     </Route>
+//   </div>
+//   :  <div>
+//       <Route path="/">
+//         <div>
+//             <InputForm getCoord={getCoord} myCoord={myCoord}/>
+//             <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div> 
+//         </div>
+//       </Route>
+//  </div>}

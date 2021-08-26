@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Button, MenuItem, Select, InputLabel, TextField } from '@material-ui/core';
 
 
 
@@ -66,31 +67,38 @@ const InputModal = ({ openPortal, setOpenPortal, waterData }) => {
         <div style={OVERLAY_STYLES} onClick={() => clearData()}></div>
         <div style={MODAL_STYLE}>
           <form>
-            <label htmlFor="username" className="hidden-style">Username</label>
-            <input name="username" type="text" value={userName} onChange={(e) => setUserName(e.target.value)}/>
-            <label htmlFor="sitename" className="hidden-style">Site Name</label>
-            <select name="sitename" onChange={(e) => setSiteName(e.target.value)}>
-              <option>Select Site Name</option>
+            <h3>Username</h3>
+            <InputLabel id="username" style={ {display: 'none'} }>Username</InputLabel>
+            <TextField labelid="username" id="outlined-secondary" value={userName} onChange={(e) => setUserName(e.target.value)}/>
+            <h3>Select Site Name </h3>
+            <InputLabel id="sitename" style={ {display: 'none'} }>Site Name</InputLabel>
+            <Select labelid="sitename" onChange={(e) => setSiteName(e.target.value)}>
+              <MenuItem>Select Site Name</MenuItem>
               {waterData.map((site, index) => (
-              <option value={site.siteName}> {site.siteName} </option>
+              <MenuItem key={index + site.siteCode} value={site.siteName}> {site.siteName} </MenuItem>
               ))}
-            </select>
-            <label htmlFor="value" className="hidden-style">Value</label>
-            <input name="value" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}/>
-            <label htmlFor="unitName" className="hidden-style">Unit Name</label>
-            <select name="unitName" onChange={(e) => setUnitName(e.target.value)}>
-              <option> Select A Unit of Measuerment </option>
-              <option value="ft/s">{`ft/s (discharge)`}</option>
-              <option value="ft">{`ft (height)`}</option>
-            </select>
-            <label htmlFor="activity" className="hidden-style">Activity</label>
-            <select name="activity" onChange={(e) => setUserActivity(e.target.value)}>
-              <option>Select an Activity</option>
-              <option value="Fishing">Fishing</option>
-            </select>
+            </Select>
+            <h3> Ideal Water Measurement </h3>
+            <InputLabel id="value" style={ {display: 'none'} }>Value</InputLabel>
+            <TextField labelid="value" value={inputValue} onChange={(e) => setInputValue(e.target.value)}/>
+            <h3> Unit of Measurement </h3>
+            <InputLabel id="unitName" style={ {display: 'none'} }>Unit Name</InputLabel>
+            <Select labelid="unitName" onChange={(e) => setUnitName(e.target.value)}>
+              <MenuItem> Select A Unit of Measuerment </MenuItem>
+              <MenuItem value="ft/s">{`ft/s (discharge)`}</MenuItem>
+              <MenuItem value="ft">{`ft (height)`}</MenuItem>
+            </Select>
+            <h3>Activity</h3>
+            <InputLabel id="activity" style={ {display: 'none'} }>Activity</InputLabel>
+            <Select labelid="activity" onChange={(e) => setUserActivity(e.target.value)}>
+              <MenuItem>Select an Activity</MenuItem>
+              <MenuItem value="Fishing">Fishing</MenuItem>
+              <MenuItem value="Rafting">Rafting</MenuItem>
+              <MenuItem value="Kayaking">Kayaking</MenuItem>
+            </Select>
           </form>
-          <button type="button" onClick={() => submitRecord(userName, siteName, inputValue, unitName, userActivity)}>Submit Record</button>
-          <button type="button" onClick={() => clearData()}>Close Modal</button>
+          <Button type="button" onClick={() => submitRecord(userName, siteName, inputValue, unitName, userActivity)}>Submit Record</Button>
+          <Button type="button" onClick={() => clearData()}>Close Modal</Button>
         </div>
       </div>, document.getElementById('portal')
 
