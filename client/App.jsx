@@ -6,6 +6,7 @@ import DataRender from './components/DataRender.jsx';
 import InputModal from './components/InputModal.jsx';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import UserProfile from './components/UserProfile.jsx';
+import Landing from './components/Landing.jsx';
 
 
 
@@ -14,16 +15,17 @@ const App = () => {
   const [openPortal, setOpenPortal] = useState(false);
   const [currentSearchParams, setCurrentSearchParams] = useState('');
   const [resetWaterDataFlag, setResetWaterDataFlag] = useState(false);
+  const [queryData, setQueryData] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
   
-  
-  
+
   
   const getCoord = (zipCode) => {
     setCurrentSearchParams(zipCode);
     axios.get(`/api/getcoordinates/${zipCode}`)
       .then((result) => {
         console.log(result);
-        useCoord(result.data.results[0].geometry.location.lat, result.data.results[0].geometry.location.lng)
+        useCoord(result.data.results[0].geometry.location.lat, result.data.results[0].geometry.location.lng);
       })
       .catch((err) => {
         console.log('err in getCoord', err)
@@ -34,6 +36,7 @@ const App = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         useCoord(position.coords.latitude, position.coords.longitude);
+        setQueryData(`${position.coords.latitude}+${position.coords.longitude}`);
       }, (err) => {
         console.log('error in geolocation', err);
       });
@@ -68,7 +71,6 @@ const App = () => {
   }
 
   const useCoord = (lat, long) => {
-    console.log(`lat: ${lat}, longitude: ${long}`);
     let west = long - .1;
     let south = lat - .1;
     let east = long + .1;
@@ -77,57 +79,47 @@ const App = () => {
     getWater(west.toFixed(6), south.toFixed(6), east.toFixed(6), north.toFixed(6));
   }
 
-  // useEffect(() => setValueSelected(false), waterData);
+  // useEffect(() => console.log('logged in'), [loggedIn]);
+
   if (resetWaterDataFlag) {
     setWaterData([]);
-    setOpenProfile(false);
     setResetWaterDataFlag(false);
+    setQueryData(false);
   }
+
   return (
-
       <div>
-
         <Header resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag} />
-        <Switch>
+        {loggedIn ?
+        <div>
 
-          <Route path="/query-result">
-                {/* <Header resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag} setOpenProfile={setOpenProfile}/> */}
-                <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/>
-          </Route>
+          <Switch>
+
+            <Route path={`/query-result/${queryData}`}>
+                  <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/>
+            </Route>
 
 
-          
-          <Route path="/userprofile" >
-              <UserProfile resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag}/>
-          </Route>
-          <Route exact path="/">
             
-            {waterData.length > 1 ? <Redirect to="/query-result"/> : <InputForm getCoord={getCoord} myCoord={myCoord}/>}
-            
+            <Route path="/userprofile" >
+                <UserProfile resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag}/>
+            </Route>
+            <Route exact path="/">
+              
+              {waterData.length > 1 ?
+              <Redirect to={`/query-result/${queryData}`}/>
+              : <InputForm getCoord={getCoord} myCoord={myCoord} setQueryData={setQueryData}/>}
+              
 
-          </Route>
-        </Switch>
-        <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal}/>
-
+            </Route>
+          </Switch>
+          <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal}/>
+        </div> :  <Landing setLoggedIn={setLoggedIn} />}
       </div>
   )
+
 }
 
 export default App;
 
 
-// {waterData.length > 1 ?
-//   <div>
-//     <Redirect from="/" to="/query-result"/> 
-//     <Route path="/query-result">
-//         <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/>
-//     </Route>
-//   </div>
-//   :  <div>
-//       <Route path="/">
-//         <div>
-//             <InputForm getCoord={getCoord} myCoord={myCoord}/>
-//             <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div> 
-//         </div>
-//       </Route>
-//  </div>}

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 
 
-const InputForm = ({ getCoord, myCoord, setValueSelected, setQuerySubmit }) => {
+const InputForm = ({ getCoord, myCoord, setQueryData }) => {
   const [userZip, setUserZip] = useState('');
 
   const handleSubmitClick = () => {
     getCoord(userZip);
+    setQueryData(userZip);
     setUserZip('');
-    setQuerySubmit(true);
   }
 
   const handleUserLocation = () => {
