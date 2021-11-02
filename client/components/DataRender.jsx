@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-const DataRender = ({ waterData, setOpenPortal }) => {
+const DataRender = ({ waterData, setOpenPortal, userData }) => {
   const [valueSelected, setValueSelected] = useState(false);
   const [waterSite, setWaterSite] = useState(null);
   const [similarSites, setSimilarSites] = useState([])
@@ -52,9 +52,9 @@ const DataRender = ({ waterData, setOpenPortal }) => {
     setSelectUnitName('');
   }
 
-  const getRecordData = (site) => {
+  const getRecordData = (user, site) => {
     console.log('site log:', site);
-    axios.get(`/api/getRecord/${site}`)
+    axios.get(`/api/getRecord/${user}/${site}`)
       .then((result) => {
         setSimilarSites(result.data);
         console.log(result.data);
@@ -65,7 +65,7 @@ const DataRender = ({ waterData, setOpenPortal }) => {
       })
   }
 
-  useEffect(() => {waterSite ? getRecordData(waterSite.siteName) : null }, [waterSite])
+  useEffect(() => {waterSite ? getRecordData(userData.given_name, waterSite.siteName) : null }, [waterSite])
   // useEffect(() => compareRecord(similarSites, selectUnitName, selectVal), similarSites)
 
   return (

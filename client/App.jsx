@@ -7,7 +7,8 @@ import InputModal from './components/InputModal.jsx';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import UserProfile from './components/UserProfile.jsx';
 import Landing from './components/Landing.jsx';
-
+import { useAuth0 } from '@auth0/auth0-react';
+import DeadHeader from './components/DeadHeader.jsx';
 
 
 const App = () => {
@@ -17,7 +18,10 @@ const App = () => {
   const [resetWaterDataFlag, setResetWaterDataFlag] = useState(false);
   const [queryData, setQueryData] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({'given_name': 'Bob'});
   
+  const { user, isAuthenticated } = useAuth0();
+
 
   
   const getCoord = (zipCode) => {
@@ -79,44 +83,54 @@ const App = () => {
     getWater(west.toFixed(6), south.toFixed(6), east.toFixed(6), north.toFixed(6));
   }
 
-  // useEffect(() => console.log('logged in'), [loggedIn]);
+  useEffect(() => {setUserData(user)}, [user]);
 
   if (resetWaterDataFlag) {
     setWaterData([]);
     setResetWaterDataFlag(false);
     setQueryData(false);
   }
+  if (isAuthenticated) {
+    return (
+      <Router>
+          <Header resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+          <div>
 
-  return (
-      <div>
-        <Header resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag} />
-        {loggedIn ?
-        <div>
+            <Switch>
 
-          <Switch>
-
-            <Route path={`/query-result/${queryData}`}>
-                  <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData}/>
-            </Route>
+              <Route path={`/query-result/${queryData}`}>
+                    <DataRender openPortal={openPortal} setOpenPortal={setOpenPortal} waterData={waterData} userData={userData}/>
+              </Route>
 
 
-            
-            <Route path="/userprofile" >
-                <UserProfile resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag}/>
-            </Route>
-            <Route exact path="/">
               
-              {waterData.length > 1 ?
-              <Redirect to={`/query-result/${queryData}`}/>
-              : <InputForm getCoord={getCoord} myCoord={myCoord} setQueryData={setQueryData}/>}
-              
+              <Route path="/profile" >
+                  <UserProfile resetWaterDataFlag={resetWaterDataFlag} setResetWaterDataFlag={setResetWaterDataFlag}/>
+              </Route>
+              <Route exact path="/">
+                
+                {waterData.length > 1 ?
+                <Redirect to={`/query-result/${queryData}`}/>
+                : <InputForm getCoord={getCoord} myCoord={myCoord} setQueryData={setQueryData}/>}
+                
 
-            </Route>
-          </Switch>
-          <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal}/>
-        </div> :  <Landing setLoggedIn={setLoggedIn} />}
-      </div>
-  )
+              </Route>
+            </Switch>
+            <InputModal waterData={waterData} openPortal={openPortal} setOpenPortal={setOpenPortal} userData={userData}/>
+          </div>
+      </Router>
+    )
+  } else {
+    return (
+      <Router>
+        <Route path="/login">
+          <DeadHeader />
+          <Landing  setLoggedIn={setLoggedIn}/>
+        </Route>
+      </Router>
+ 
+    )
+  }
 
 }
 

@@ -1,12 +1,12 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, MenuItem, Select, InputLabel, TextField } from '@material-ui/core';
 
 
 
 
-const InputModal = ({ openPortal, setOpenPortal, waterData }) => {
+const InputModal = ({ openPortal, setOpenPortal, waterData, userData }) => {
   const [userName, setUserName] = useState('');
   const [siteName, setSiteName] = useState('');
   const [inputValue, setInputValue] = useState('');
@@ -58,6 +58,8 @@ const InputModal = ({ openPortal, setOpenPortal, waterData }) => {
     backgroundColor: 'rgba(0,0,0, .35)',
     zIndex: 1000,
   };
+
+  useEffect(() => {userData ? setUserName(userData.given_name) : null}, [userData])
   
   if(!openPortal) {
     return null;
@@ -68,8 +70,7 @@ const InputModal = ({ openPortal, setOpenPortal, waterData }) => {
         <div style={MODAL_STYLE}>
           <form>
             <h3>Username</h3>
-            <InputLabel id="username" style={ {display: 'none'} }>Username</InputLabel>
-            <TextField labelid="username" id="outlined-secondary" value={userName} onChange={(e) => setUserName(e.target.value)}/>
+            <h4>{`${userName}`}</h4>
             <h3>Select Site Name </h3>
             <InputLabel id="sitename" style={ {display: 'none'} }>Site Name</InputLabel>
             <Select labelid="sitename" onChange={(e) => setSiteName(e.target.value)}>

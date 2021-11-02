@@ -1,16 +1,28 @@
 const axios = require('axios');
 const express = require('express');
 const morgan = require('morgan');
-const { GEOCODE_KEY } = require('../config.js')
-const { insertUserInfo, getRecordQuery } = require('./queries.js')
+const { GEOCODE_KEY } = require('../config.js');
+const { auth, requiresAuth } = require('express-openid-connect');
+const { insertUserInfo, getRecordQuery, getAllRecordsByName } = require('./queries.js');
 const app = express();
 
 const PORT = 3000;
 
 app.use(morgan('dev'));
 
+app.use('/login', express.static('public'));
 app.use(express.static('public'));
 app.use(express.json());
+// app.use(auth(authConfig));
+
+// app.get('/', (req, res) => {
+//   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+// });
+
+// app.get('/api/profile', requiresAuth(), (req, res) => {
+//   res.send(JSON.stringify(req.oidc.user));
+// });
+
 
 app.get('/api/getcoordinates/:zipCode', (req, res) => {
   const { zipCode } = req.params;
@@ -46,9 +58,15 @@ app.post('/api/userinput', (req, res) => {
   insertUserInfo(username, sitename, value, unitname, activity, res);
 })
 
-app.get('/api/getRecord/:site', (req, res) => {
-  const { site } = req.params;
-  getRecordQuery(site, res);
+app.get('/api/getRecord/:user/:site', (req, res) => {
+  const { user, site } = req.params;
+  getRecordQuery(user, site, res);
+})
+
+app.get('/api/records/:name', (req, res) => {
+  const { name } = req.params;
+  console.log(name);
+  getAllRecordsByName(name, res);
 })
 
 app.listen(PORT, () => {

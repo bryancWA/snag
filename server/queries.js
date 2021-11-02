@@ -15,9 +15,9 @@ const insertUserInfo = (usrnme, stenm, val, untnm, actvty, res) => {
     })
 }
 
-const getRecordQuery = (siteName, res) => {
+const getRecordQuery = (user = 'bryan', siteName, res) => {
   query = {
-    text: `SELECT * FROM userinput WHERE username = 'bryan' AND sitename = $1`,
+    text: `SELECT * FROM userinput WHERE username = '${user}' AND sitename = $1`,
     values: [siteName],
   }
   pool.query(query.text, query.values)
@@ -30,7 +30,23 @@ const getRecordQuery = (siteName, res) => {
     })
 }
 
+const getAllRecordsByName = (name, res) => {
+  query = {
+    text: `SELECT * FROM userinput WHERE username = $1`,
+    values: [name]
+  }
+  pool.query(query.text, query.values)
+    .then((results) => {
+      res.send(results.rows);
+    })
+    .catch((err) => {
+      console.log('err in getAllRecordByName', err);
+      res.sendStatus(500);
+    })
+}
+
 module.exports = {
   insertUserInfo,
-  getRecordQuery
+  getRecordQuery,
+  getAllRecordsByName
 }
