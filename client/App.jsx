@@ -19,6 +19,7 @@ const App = () => {
   const [queryData, setQueryData] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({'given_name': 'Bob'});
+  const [noWaterData, setNoWaterData] = useState(false);
   
   const { user, isAuthenticated } = useAuth0();
 
@@ -58,8 +59,12 @@ const App = () => {
       obj.value = data[i].values[0].value[0].value;
       obj.unitName = data[i].variable.variableName;
       tempArr.push(obj);
+    } 
+    if (tempArr.length === 0) {
+      setNoWaterData(true);
+    } else {
+      setWaterData(tempArr);
     }
-    setWaterData(tempArr);
   }
 
   const getWater = (wst, sth, est, nrth) => {
@@ -89,6 +94,7 @@ const App = () => {
     setWaterData([]);
     setResetWaterDataFlag(false);
     setQueryData(false);
+    setNoWaterData(false);
   }
   if (isAuthenticated) {
     return (
@@ -111,7 +117,7 @@ const App = () => {
                 
                 {waterData.length > 1 ?
                 <Redirect to={`/query-result/${queryData}`}/>
-                : <InputForm getCoord={getCoord} myCoord={myCoord} setQueryData={setQueryData}/>}
+                : <InputForm getCoord={getCoord} myCoord={myCoord} setQueryData={setQueryData} noWaterData={noWaterData} setWaterData={setWaterData}/>}
                 
 
               </Route>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 
 
-const InputForm = ({ getCoord, myCoord, setQueryData }) => {
+const InputForm = ({ getCoord, myCoord, setQueryData, noWaterData, setWaterData }) => {
   const [userZip, setUserZip] = useState('');
 
   const handleSubmitClick = (event) => {
@@ -10,6 +10,7 @@ const InputForm = ({ getCoord, myCoord, setQueryData }) => {
     getCoord(userZip);
     setQueryData(userZip);
     setUserZip('');
+    setWaterData(false);
   }
 
   const handleUserLocation = () => {
@@ -28,7 +29,8 @@ const InputForm = ({ getCoord, myCoord, setQueryData }) => {
         <Button type="submit" onClick={(e) => handleSubmitClick(e)}> Submit </Button>
         <Button type="button" onClick={() => handleUserLocation()}> Use My Location </Button>
       </form>
-      <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div> 
+      {!noWaterData ? <div id="info-prompt"> Get Started By Entering A Location In The Box Above </div> 
+      : <div id="info-prompt"> Please review your search criteria as there are no results near that location </div>}
     </div>
   )
 }
