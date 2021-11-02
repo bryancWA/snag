@@ -57,7 +57,7 @@ const DataRender = ({ waterData, setOpenPortal, userData }) => {
     axios.get(`/api/getRecord/${user}/${site}`)
       .then((result) => {
         setSimilarSites(result.data);
-        console.log(result.data);
+        // console.log(result.data);
         compareRecord(result.data, selectUnitName, selectVal);
       })
       .catch((err) => {

@@ -19,7 +19,7 @@ const UserProfile = ({ resetWaterDataFlag, setResetWaterDataFlag }) => {
   const getAllUserRecords = (name) => {
     axios.get(`/api/records/${name}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.data.length) {
           SetUserRecords(response.data);
         }

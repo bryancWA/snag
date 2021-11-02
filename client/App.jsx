@@ -29,7 +29,7 @@ const App = () => {
     setCurrentSearchParams(zipCode);
     axios.get(`/api/getcoordinates/${zipCode}`)
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         useCoord(result.data.results[0].geometry.location.lat, result.data.results[0].geometry.location.lng);
       })
       .catch((err) => {
@@ -70,7 +70,7 @@ const App = () => {
   const getWater = (wst, sth, est, nrth) => {
     axios.get(`/api/getwater/${wst}/${sth}/${est}/${nrth}`)
       .then((result) => {
-        console.log('getwater result:', result.data.value);
+        // console.log('getwater result:', result.data.value);
         waterDataConstructor(result.data.value.timeSeries);
     
       })
